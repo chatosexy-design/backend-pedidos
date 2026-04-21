@@ -3,7 +3,6 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import rutaPedidos from './rutas/pedidos.js';
 import rutaUsuarios from './rutas/usuarios.js';
-import { requireAuth, handleAuthError } from './middleware/jwt.js';
 import conectarBD from './bd/init.js';
 
 const app = express();
@@ -23,14 +22,11 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Rutas de Usuarios (Públicas y Privadas manejadas internamente o por el middleware general)
+// Rutas de Usuarios (Públicas)
 app.use('/api/v1/usuario', rutaUsuarios);
 
-// Aplicar middleware de autenticación a las rutas de pedidos
-app.use('/api/v1/pedidos', requireAuth, rutaPedidos);
-
-// Manejador de errores de autenticación
-app.use(handleAuthError);
+// Rutas de pedidos (Ahora públicas)
+app.use('/api/v1/pedidos', rutaPedidos);
 
 // Ruta de prueba
 app.get('/', (req, res) => {
